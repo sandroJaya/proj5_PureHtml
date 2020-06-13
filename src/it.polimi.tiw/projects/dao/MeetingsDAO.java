@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import it.polimi.project5.beans.Meeting;
+import it.polimi.tiw.projects.beans.Meeting;
 
 
 public class MeetingsDAO {

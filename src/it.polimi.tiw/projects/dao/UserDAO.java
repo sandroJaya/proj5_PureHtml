@@ -4,8 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.polimi.project5.beans.Meeting;
-import it.polimi.project5.beans.User;
+import it.polimi.tiw.projects.beans.Meeting;
+import it.polimi.tiw.projects.beans.User;
 
 public class UserDAO {
     private Connection connection;

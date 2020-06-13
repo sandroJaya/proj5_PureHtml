@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="apache-commons-lang">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/apache-commons-lang.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/attoparser-2.0.5.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javassist-3.20.0-GA.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-8.0.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ognl-3.1.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/thymeleaf-3.0.11.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/unbescape-1.1.6.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

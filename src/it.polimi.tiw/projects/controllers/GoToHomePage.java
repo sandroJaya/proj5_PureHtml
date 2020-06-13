@@ -19,9 +19,9 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import it.polimi.tiw.projects.beans.Mission;
+import it.polimi.tiw.projects.beans.Meeting;
 import it.polimi.tiw.projects.beans.User;
-import it.polimi.tiw.projects.dao.MissionsDAO;
+import it.polimi.tiw.projects.dao.MeetingsDAO;
 import it.polimi.tiw.projects.utils.ConnectionHandler;
 
 @WebServlet("/Home")
@@ -54,13 +54,13 @@ public class GoToHomePage extends HttpServlet {
 			return;
 		}
 		User user = (User) session.getAttribute("user");
-		MissionsDAO missionsDAO = new MissionsDAO(connection);
-		List<Mission> missions = new ArrayList<Mission>();
+		MeetingsDAO meetingsDAO = new MeetingsDAO(connection);
+		List<Meeting> meetings = new ArrayList<Meeting>();
 
 		try {
-			missions = missionsDAO.findMissionsByUser(user.getId());
+			meetings = meetingsDAO.findMeetingsByUser(user.getId());
 		} catch (SQLException e) {
-			// for debugging only e.printStackTrace();
+			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover missions");
 			return;
 		}
@@ -69,7 +69,7 @@ public class GoToHomePage extends HttpServlet {
 		String path = "/WEB-INF/Home.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("missions", missions);
+		ctx.setVariable("meetings", meetings);
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 
