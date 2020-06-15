@@ -41,22 +41,30 @@ public class GetContacts extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String loginpath = getServletContext().getContextPath() + "/index.html";
+
+
         HttpSession session = request.getSession();
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
         if(session.isNew() || session.getAttribute("user") == null) {
+            String loginpath = getServletContext().getContextPath() + "/index.html";
             response.sendRedirect(loginpath);
             return;
         }
 
-        if(session.getAttribute("todeselect") != null){
-            ctx.setVariable("errorField", "Too many users selected, delete at least " +
-                    session.getAttribute("todeselect"));
+        if(session.getAttribute("toDeselect") != null){
+            if((Integer) session.getAttribute("tries")<3){
+                ctx.setVariable("errorField", "Too many users selected, delete at least " +
+                        session.getAttribute("toDeselect"));
+            }else{
+                ctx.setVariable("errorField", "Go to HomePage, the wizard will be resetted");
+                ctx.setVariable("linkToHome",true);
+            }
+
 
         } else {
-            session.setAttribute("tries", 0);
+            ctx.setVariable("errorField", "");
             Cookie cookies[] = new Cookie[5];
 
             cookies[0] = new Cookie("title", request.getParameter("title"));

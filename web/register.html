@@ -2,19 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
-<title>Login page</title>
+<title>Register page</title>
 </head>
 <body>
 	<h1>Welcome to the meeting management application</h1>
 
-	<form action="CheckLogin" method="POST">
+	<form action="Register" method="POST">
 		Username: <input type="text" name="username" required> <br>
 		Password: <input type="password" name="pwd" required><br>
-		<input type="submit" value="login">
+		Repeat Password: <input type="password" name="repwd" required><br>
+		Name: <input type="text" name="name" required> <br>
+		Surname: <input type="text" name="surname" required> <br>
+		<input type="submit" value="register">
 		<p th:text=" ${errorMsg}"></p>
 	</form>
 
-	<a href="register.html">Don't have an account? Register!</a>
+	<a href="index.html">Login</a>
 
 </body>
 </html>

@@ -23,12 +23,15 @@
             <tr th:each="c : ${contacts}">
                 <td th:text="${c.name}"></td>
                 <td th:text="${c.surname}"></td>
-                <td><input type="checkbox"  name="invited" th:value="${c.id}"/></td>
+                <td><input type="checkbox"  name="invited" th:value="${c.id}" th:checked="${checked}"/></td>
             </tbody>
-            <input type="submit" name="submit">
         </table>
+        <br>
+        <input type="submit" name="submit">
     </div>
 </form>
-<link href="/Home" th:href="@{/Home}" th:style="${visibility}"/>
+<a href="Home.html"
+   th:href="@{/Home}"
+   th:if="${linkToHome}">Go to HomePage</a>
 </body>
 </html>

@@ -27,7 +27,9 @@ public class CreateMeeting extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private Connection connection = null;
-
+    private Date getMeYesterday() {
+        return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+    }
     public CreateMeeting() {
         super();
     }
@@ -36,12 +38,11 @@ public class CreateMeeting extends HttpServlet {
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
-    private Date getMeYesterday() {
-        return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+
         // If the user is not logged in (not present in session) redirect to the login
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
@@ -96,6 +97,7 @@ public class CreateMeeting extends HttpServlet {
         try {
             for (String s : request.getParameterValues("invited")) {
                 participantsID.add(Integer.parseInt(s));
+
             }
             participantsID.add(user.getId());
         }catch (Exception e){
@@ -103,22 +105,20 @@ public class CreateMeeting extends HttpServlet {
         }
         String ctxpath = getServletContext().getContextPath();
 
-        int tries = 0;
+        int tries=(Integer) session.getAttribute("tries");
 
-        if(participantsID.size() > maxParticipants){
-            session.setAttribute("todeselect", participantsID.size() - maxParticipants);
+        if(participantsID.size() > maxParticipants || tries==3){
+            session.setAttribute("toDeselect", participantsID.size() - maxParticipants);
             String deselect = ctxpath + "/GetContacts";
-            tries = (Integer) session.getAttribute("tries");
-            tries++;
+
             if(tries < 3) {
+                tries++;
                 session.setAttribute("tries", tries);
-                ctx.setVariable("visibility", "visibility: hidden");
-                response.sendRedirect(deselect);
-            } else{
-                System.out.println(tries);
-                ctx.setVariable("visibility", "visibility: true");
-                response.sendRedirect(deselect);
             }
+            response.sendRedirect(deselect);
+            return;
+
+
         }else {
             // Create mission in DB
 
@@ -131,6 +131,7 @@ public class CreateMeeting extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create mission");
                 return;
             }
+
 
             // return the user to the right view
             String path = ctxpath + "/Home";

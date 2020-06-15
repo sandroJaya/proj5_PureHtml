@@ -46,15 +46,24 @@ public class GoToHomePage extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String loginpath = getServletContext().getContextPath() + "/index.html";
+
+
+
 		HttpSession session = request.getSession();
-		if (session.isNew() || session.getAttribute("user") == null) {
-			response.sendRedirect(loginpath);
-			return;
-		}
 		User user = (User) session.getAttribute("user");
 		MeetingsDAO meetingsDAO = new MeetingsDAO(connection);
 		List<Meeting> meetings = new ArrayList<Meeting>();
+		session.setAttribute("tries", 0);
+
+
+		if (session.isNew() || session.getAttribute("user") == null) {
+			String loginpath = getServletContext().getContextPath() + "/index.html";
+			response.sendRedirect(loginpath);
+			return;
+		}
+
+
+
 
 		try {
 			meetings = meetingsDAO.findMeetingsByUser(user.getId());
