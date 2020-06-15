@@ -3,6 +3,7 @@ package it.polimi.tiw.projects.dao;
 import java.sql.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,15 +18,15 @@ public class MeetingsDAO {
         this.connection = connection;
     }
 
-    public int createMeeting(Integer creator, String title, String dateStart, String timeStart, Float duration,
-                                 Integer maxParticipants) throws SQLException {
+    public int createMeeting(Integer creator, String title, Date dateStart, String timeStart, Float duration,
+                             Integer maxParticipants) throws SQLException {
 
         String query1 = "";
 
         query1 = "INSERT INTO meeting (title, dateStart, creator, timeStart, duration, maxparticipants) VALUES (?, ?, ?, ?,?,?)";
         try (PreparedStatement pstatement = connection.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);) {
             pstatement.setString(1, title);
-            pstatement.setString(2, dateStart);
+            pstatement.setDate(2, new java.sql.Date(dateStart.getTime()));
             pstatement.setInt(3, creator);
             pstatement.setString(4, timeStart);
             pstatement.setFloat(5, duration);
@@ -60,7 +61,7 @@ public class MeetingsDAO {
     public List<Meeting> findMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
 
-        String query = "SELECT * FROM meeting where creator = ? ORDER BY dateStart DESC";
+        String query = "SELECT * FROM meeting where creator = ? ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery()) {
@@ -71,7 +72,7 @@ public class MeetingsDAO {
                     meeting.setStartDate(result.getDate("dateStart"));
                     meeting.setCreator(result.getInt("creator"));
                     meeting.setTime(result.getTime("timeStart"));
-                    meeting.setDuration(result.getInt("duration"));
+                    meeting.setDuration(result.getFloat("duration"));
                     meeting.setMaxParticipants(result.getInt("maxParticipants"));
                     meetings.add(meeting);
                 }
@@ -82,7 +83,7 @@ public class MeetingsDAO {
 
     public List<Meeting> findUserInvitedMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
-        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant";
+        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery();) {
@@ -93,7 +94,7 @@ public class MeetingsDAO {
                     meeting.setStartDate(result.getDate("dateStart"));
                     meeting.setCreator(result.getInt("creator"));
                     meeting.setTime(result.getTime("timeStart"));
-                    meeting.setDuration(result.getInt("duration"));
+                    meeting.setDuration(result.getFloat("duration"));
                     meetings.add(meeting);
                 }
             }

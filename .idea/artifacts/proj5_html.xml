@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="proj5_html">
+    <output-path>$PROJECT_DIR$/out/artifacts/proj5_html</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="proj5_PureHtml/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="proj5_PureHtml" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

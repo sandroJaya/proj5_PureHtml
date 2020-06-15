@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+    <link rel="stylesheet" type="text/css" media="all"
+          href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}"/>
+</head>
+<body>
+<form id="contactsform" action="#" th:action="@{/CreateMeeting}" method="POST">
+    <div class="modal-content">
+        <h3>Select meeting participants</h3>
+        <p id="id_contactsbar" th:text="${errorField}" class="alertmessage"></p>
+        <table id="id_contactscontainer" class="boxed">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Select</th>
+            </tr>
+            </thead>
+            <tbody id="id_contactscontainerbody" class="boxed">
+            <tr th:each="c : ${contacts}">
+                <td th:text="${c.name}"></td>
+                <td th:text="${c.surname}"></td>
+                <td><input type="checkbox"  name="invited" th:value="${c.id}"/></td>
+            </tbody>
+            <input type="submit" name="submit">
+        </table>
+    </div>
+</form>
+<link href="/Home" th:href="@{/Home}" th:style="${visibility}"/>
+</body>
+</html>
