@@ -94,6 +94,12 @@ public class CreateMeeting extends HttpServlet {
             return;
         }
 
+        if (request.getParameterValues("invited")==null){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no users found");
+            return;
+        }
+
+
         try {
             for (String s : request.getParameterValues("invited")) {
                 participantsID.add(Integer.parseInt(s));

@@ -23,7 +23,7 @@
             <tr th:each="c : ${contacts}">
                 <td th:text="${c.name}"></td>
                 <td th:text="${c.surname}"></td>
-                <td><input type="checkbox"  name="invited" th:value="${c.id}" th:checked="${checked}"/></td>
+                <td><input type="checkbox"  name="invited" th:value="${c.id}" th:checked="${c.invited}"/></td>
             </tbody>
         </table>
         <br>

@@ -8,6 +8,7 @@ public class User {
     private String surname;
     private boolean invited;
 
+
     public int getId() {
         return id;
     }

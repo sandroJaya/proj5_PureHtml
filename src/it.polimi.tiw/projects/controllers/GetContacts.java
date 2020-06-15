@@ -82,6 +82,7 @@ public class GetContacts extends HttpServlet {
             }
         }
 
+
         User user = (User) session.getAttribute("user");
         UserDAO userDAO = new UserDAO(connection);
         List<User> users;
@@ -98,6 +99,7 @@ public class GetContacts extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"It was not possible to recover contacts");
             return;
         }
+
         // Redirect to the Home page and add missions to the parameters
         String path = "/WEB-INF/Contacts.html";
 
