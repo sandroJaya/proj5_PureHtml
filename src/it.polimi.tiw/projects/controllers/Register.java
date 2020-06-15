@@ -41,16 +41,21 @@ public class Register extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        String path;
         // obtain and escape params
         String usrn = null;
         String pwd = null;
         String repwd = null;
         String name = null;
         String surname = null;
+
         try {
             usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
             pwd = StringEscapeUtils.escapeJava(request.getParameter("pwd"));
-            repwd = StringEscapeUtils.escapeJava(request.getParameter("username"));
+            repwd = StringEscapeUtils.escapeJava(request.getParameter("repwd"));
             name = StringEscapeUtils.escapeJava(request.getParameter("name"));
             surname = StringEscapeUtils.escapeJava(request.getParameter("surname"));
         } catch (NullPointerException e) {
@@ -59,6 +64,16 @@ public class Register extends HttpServlet {
             return;
         }
 
+
+        if (!pwd.equals(repwd)) {
+            System.out.println(pwd);
+            System.out.println(repwd);
+            ctx.setVariable("errorMsg", "Passwords do not match");
+            path = "/register.html";
+            templateEngine.process(path, ctx, response.getWriter());
+            System.out.println("BBBBBBBBBBBBB");
+            return;
+        }
 
         // query db to authenticate for user
         UserDAO userDao = new UserDAO(connection);
@@ -72,23 +87,19 @@ public class Register extends HttpServlet {
 
         // If the user exists, add info to the session and go to home page, otherwise
         // show login page with error message
-        ServletContext servletContext = getServletContext();
-        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
 
         if (!user) {
             ctx.setVariable("errorMsg", "Account already exists");
+            path = "/register.html";
+            templateEngine.process(path, ctx, response.getWriter());
             return;
-
         }
-        else if (!pwd.equals(repwd)) {
-            ctx.setVariable("errorMsg", "Passwords do not match");
-            return;
-
-        } else {
-            String path = getServletContext().getContextPath() + "/index.html";
+        else {
+            ctx.setVariable("errorMsg", "");
+            path = getServletContext().getContextPath() + "/index.html";
             response.sendRedirect(path);
         }
+
 
     }
 

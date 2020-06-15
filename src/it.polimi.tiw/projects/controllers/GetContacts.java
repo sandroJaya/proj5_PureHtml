@@ -64,7 +64,10 @@ public class GetContacts extends HttpServlet {
 
 
         } else {
-            ctx.setVariable("errorField", "");
+
+            if ((Integer) session.getAttribute("tries")==0) {
+                ctx.setVariable("errorField", "");
+            }
             Cookie cookies[] = new Cookie[5];
 
             cookies[0] = new Cookie("title", request.getParameter("title"));
