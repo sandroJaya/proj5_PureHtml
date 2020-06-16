@@ -65,7 +65,7 @@
             </p>
             <p>
                 Date: <input type="date" name="date"
-                             th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                             th:attr="min=${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}"
                              placeholder="yyyy-mm-dd" required/>
             </p>
             <p>

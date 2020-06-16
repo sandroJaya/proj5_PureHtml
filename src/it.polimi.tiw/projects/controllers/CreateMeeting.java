@@ -49,6 +49,7 @@ public class CreateMeeting extends HttpServlet {
             String loginpath = getServletContext().getContextPath() + "/index.html";
             response.sendRedirect(loginpath);
             return;
+
         }
 
         // Get and parse all parameters from request

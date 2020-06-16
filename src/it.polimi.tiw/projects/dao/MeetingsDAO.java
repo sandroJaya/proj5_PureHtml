@@ -62,7 +62,7 @@ public class MeetingsDAO {
     public List<Meeting> findMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
 
-        String query = "SELECT * FROM meeting where creator = ? and dateStart>curdate() ORDER BY dateStart ASC";
+        String query = "SELECT * FROM meeting where creator = ? and dateStart>(SELECT curdate() - 1) ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery()) {
@@ -84,7 +84,7 @@ public class MeetingsDAO {
 
     public List<Meeting> findUserInvitedMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
-        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant and dateStart>curdate() ORDER BY dateStart ASC";
+        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant and dateStart>(SELECT curdate() - 1) ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery();) {
