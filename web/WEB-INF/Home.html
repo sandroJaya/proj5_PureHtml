@@ -58,7 +58,6 @@
 
 <div>
     <p>>Use the wizard to organize a meeting</p>
-    <!-- <form action="#" th:action="@{/CreateMeeting}" method="POST" class="boxed"> -->
     <form action="#" th:action="@{/GetContacts}" method="POST" class="boxed">
         <fieldset>
             <p>
@@ -77,7 +76,7 @@
             </p>
 
             <p>
-                Max. number of participants: <input type="number" name="maxparticipants" min=0 required/>
+                Max. number of participants: <input type="number" name="maxparticipants" min=1 required/>
             </p>
             <input type="submit" name="submit">
         </fieldset>

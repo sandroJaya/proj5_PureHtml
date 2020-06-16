@@ -26,7 +26,8 @@ public class MeetingsDAO {
         query1 = "INSERT INTO meeting (title, dateStart, creator, timeStart, duration, maxparticipants) VALUES (?, ?, ?, ?,?,?)";
         try (PreparedStatement pstatement = connection.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);) {
             pstatement.setString(1, title);
-            pstatement.setDate(2, new java.sql.Date(dateStart.getTime()));
+            long hours = 12L * 60L * 60L * 1000L;
+            pstatement.setDate(2, new java.sql.Date(dateStart.getTime() + hours));
             pstatement.setInt(3, creator);
             pstatement.setString(4, timeStart);
             pstatement.setFloat(5, duration);
@@ -34,7 +35,7 @@ public class MeetingsDAO {
             pstatement.executeUpdate();
             ResultSet generatedKeys = pstatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return(generatedKeys.getInt(1));
+                return (generatedKeys.getInt(1));
 
             } else throw new SQLException("Creation meeting reference failed");
         }
@@ -42,16 +43,16 @@ public class MeetingsDAO {
 
     }
 
-    public void addParticipants(int meetingKey,  List<Integer> participantsID) throws SQLException{
-         String query = "";
+    public void addParticipants(int meetingKey, List<Integer> participantsID) throws SQLException {
+        String query = "";
         query = "INSERT INTO participant (meeting, userParticipant) VALUES (?,?)";
-        for(Integer participant : participantsID) {
+        for (Integer participant : participantsID) {
             try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
                 pstatement.setInt(1, meetingKey);
                 pstatement.setInt(2, participant);
                 pstatement.executeUpdate();
                 ResultSet generatedKeys = pstatement.getGeneratedKeys();
-                if(!generatedKeys.next()) throw new SQLException("Creation participant reference failed");
+                if (!generatedKeys.next()) throw new SQLException("Creation participant reference failed");
             }
 
         }
@@ -61,7 +62,7 @@ public class MeetingsDAO {
     public List<Meeting> findMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
 
-        String query = "SELECT * FROM meeting where creator = ? ORDER BY dateStart ASC";
+        String query = "SELECT * FROM meeting where creator = ? and dateStart>curdate() ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery()) {
@@ -83,7 +84,7 @@ public class MeetingsDAO {
 
     public List<Meeting> findUserInvitedMeetingsByUser(int userId) throws SQLException {
         List<Meeting> meetings = new ArrayList<Meeting>();
-        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant ORDER BY dateStart ASC";
+        String query = "select id_meeting, title, dateStart, creator, timeStart, duration  from (meeting join participant join userlist) where userlist.id = ? and meeting.id_meeting=participant.meeting and userlist.id = participant.userParticipant and dateStart>curdate() ORDER BY dateStart ASC";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setInt(1, userId);
             try (ResultSet result = pstatement.executeQuery();) {

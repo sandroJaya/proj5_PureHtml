@@ -66,12 +66,9 @@ public class Register extends HttpServlet {
 
 
         if (!pwd.equals(repwd)) {
-            System.out.println(pwd);
-            System.out.println(repwd);
             ctx.setVariable("errorMsg", "Passwords do not match");
             path = "/register.html";
             templateEngine.process(path, ctx, response.getWriter());
-            System.out.println("BBBBBBBBBBBBB");
             return;
         }
 

@@ -102,10 +102,7 @@ public class GetContacts extends HttpServlet {
 
 
         ArrayList<Integer> IDs=(ArrayList<Integer>) session.getAttribute("participantsIDs");
-        System.out.println(IDs!=null);
         if(IDs!=null) {
-
-            System.out.println("AAAAAAA "+IDs.size());
             for (int i : IDs) {
                 for (User u : users) {
                     if (u.getId() == i)

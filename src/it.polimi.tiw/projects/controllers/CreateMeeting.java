@@ -89,21 +89,21 @@ public class CreateMeeting extends HttpServlet {
             e.printStackTrace();
         }
 
+
+
         if (isBadRequest) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
             return;
         }
 
-        if (request.getParameterValues("invited")==null){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no users found");
-            return;
-        }
 
 
         try {
-            for (String s : request.getParameterValues("invited")) {
-                participantsID.add(Integer.parseInt(s));
+            if(request.getParameterValues("invited")!=null) {
+                for (String s : request.getParameterValues("invited")) {
+                    participantsID.add(Integer.parseInt(s));
 
+                }
             }
             participantsID.add(user.getId());
         }catch (Exception e){
@@ -136,7 +136,7 @@ public class CreateMeeting extends HttpServlet {
                 meetingKey = meetingsDAO.createMeeting(user.getId(), title, dateStart, timeStart, duration, maxParticipants);
                 meetingsDAO.addParticipants(meetingKey, participantsID);
             } catch (SQLException e) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create mission");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create meeting");
                 return;
             }
 
