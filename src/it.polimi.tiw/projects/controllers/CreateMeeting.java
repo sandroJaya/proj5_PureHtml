@@ -20,21 +20,34 @@ import java.util.List;
 import it.polimi.tiw.projects.beans.User;
 import it.polimi.tiw.projects.dao.MeetingsDAO;
 import it.polimi.tiw.projects.utils.ConnectionHandler;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 @WebServlet("/CreateMeeting")
 public class CreateMeeting extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private Connection connection = null;
+    private TemplateEngine templateEngine;
+
     private Date getMeYesterday() {
         return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
     }
+
     public CreateMeeting() {
         super();
     }
 
     public void init() throws ServletException {
+
+        ServletContext servletContext = getServletContext();
+        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        this.templateEngine = new TemplateEngine();
+        this.templateEngine.setTemplateResolver(templateResolver);
+        templateResolver.setSuffix(".html");
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
@@ -67,17 +80,17 @@ public class CreateMeeting extends HttpServlet {
 
         try {
             Cookie cookies[] = request.getCookies();
-            for (Cookie c: cookies){
-                if(c.getName().equals("title")){
+            for (Cookie c : cookies) {
+                if (c.getName().equals("title")) {
                     title = c.getValue();
-                } else if(c.getName().equals("date")){
+                } else if (c.getName().equals("date")) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     dateStart = (Date) sdf.parse(c.getValue());
-                }else if(c.getName().equals("time")){
+                } else if (c.getName().equals("time")) {
                     timeStart = c.getValue();
-                }else if(c.getName().equals("duration")){
+                } else if (c.getName().equals("duration")) {
                     duration = Float.parseFloat(c.getValue());
-                }else if(c.getName().equals("maxparticipants")){
+                } else if (c.getName().equals("maxparticipants")) {
                     maxParticipants = Integer.parseInt(c.getValue());
                 }
             }
@@ -91,44 +104,46 @@ public class CreateMeeting extends HttpServlet {
         }
 
 
-
         if (isBadRequest) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
             return;
         }
 
 
-
         try {
-            if(request.getParameterValues("invited")!=null) {
+            if (request.getParameterValues("invited") != null) {
                 for (String s : request.getParameterValues("invited")) {
                     participantsID.add(Integer.parseInt(s));
 
                 }
             }
             participantsID.add(user.getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         String ctxpath = getServletContext().getContextPath();
 
-        int tries=(Integer) session.getAttribute("tries");
+        int tries = (Integer) session.getAttribute("tries");
 
-        if(participantsID.size() > maxParticipants || tries==3){
-            session.setAttribute("toDeselect", participantsID.size() - maxParticipants);
-            String deselect = ctxpath + "/GetContacts";
 
-            if(tries < 3) {
-                tries++;
-                session.setAttribute("tries", tries);
+        if (participantsID.size() > maxParticipants) {
+
+            if (tries == 2) {
+                String path = "/WEB-INF/CreationFailed.html";
+                templateEngine.process(path, ctx, response.getWriter());
+                return;
             }
 
-            session.setAttribute("participantsIDs",participantsID);
+            tries++;
+            session.setAttribute("toDeselect", participantsID.size() - maxParticipants);
+            String deselect = ctxpath + "/GetContacts";
+            session.setAttribute("tries", tries);
+            session.setAttribute("participantsIDs", participantsID);
             response.sendRedirect(deselect);
             return;
 
 
-        }else {
+        } else {
             // Create mission in DB
 
             MeetingsDAO meetingsDAO = new MeetingsDAO(connection);

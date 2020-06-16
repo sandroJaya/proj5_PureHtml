@@ -14,7 +14,7 @@ public class UserDAO {
         this.connection = connection;
     }
 
-    public User checkCredentials(String usrn, String pwd) throws SQLException { // dice se esiste un determinato account nel db. se c'è ritorna l'account, se no null
+    public User checkCredentials(String usrn, String pwd) throws SQLException { // dice se esiste un determinato account nel db. se c'ï¿½ ritorna l'account, se no null
         String query = "SELECT  id, username, name, surname FROM userlist  WHERE username = ? AND password =?";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
             pstatement.setString(1, usrn);

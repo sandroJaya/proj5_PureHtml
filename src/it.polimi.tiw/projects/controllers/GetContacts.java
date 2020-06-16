@@ -47,25 +47,19 @@ public class GetContacts extends HttpServlet {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
-        if(session.isNew() || session.getAttribute("user") == null) {
+        if (session.isNew() || session.getAttribute("user") == null) {
             String loginpath = getServletContext().getContextPath() + "/index.html";
             response.sendRedirect(loginpath);
             return;
         }
 
-        if(session.getAttribute("toDeselect") != null){
-            if((Integer) session.getAttribute("tries")<3){
-                ctx.setVariable("errorField", "Too many users selected, delete at least " +
-                        session.getAttribute("toDeselect"));
-            }else{
-                ctx.setVariable("errorField", "Go to HomePage, the wizard will be resetted");
-                ctx.setVariable("linkToHome",true);
-            }
-
+        if (session.getAttribute("toDeselect") != null) {
+            ctx.setVariable("errorField", "Too many users selected, delete at least " +
+                    session.getAttribute("toDeselect"));
 
         } else {
 
-            if ((Integer) session.getAttribute("tries")==0) {
+            if ((Integer) session.getAttribute("tries") == 0) {
                 ctx.setVariable("errorField", "");
             }
             Cookie cookies[] = new Cookie[5];
@@ -89,20 +83,20 @@ public class GetContacts extends HttpServlet {
 
         try {
             users = userDAO.findUser(user.getId());
-            if(users == null){
+            if (users == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
                 return;
             }
 
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"It was not possible to recover contacts");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "It was not possible to recover contacts");
             return;
         }
 
 
-        ArrayList<Integer> IDs=(ArrayList<Integer>) session.getAttribute("participantsIDs");
-        if(IDs!=null) {
+        ArrayList<Integer> IDs = (ArrayList<Integer>) session.getAttribute("participantsIDs");
+        if (IDs != null) {
             for (int i : IDs) {
                 for (User u : users) {
                     if (u.getId() == i)
