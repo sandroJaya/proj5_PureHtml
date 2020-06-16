@@ -100,6 +100,20 @@ public class GetContacts extends HttpServlet {
             return;
         }
 
+
+        ArrayList<Integer> IDs=(ArrayList<Integer>) session.getAttribute("participantsIDs");
+        System.out.println(IDs!=null);
+        if(IDs!=null) {
+
+            System.out.println("AAAAAAA "+IDs.size());
+            for (int i : IDs) {
+                for (User u : users) {
+                    if (u.getId() == i)
+                        u.setInvited(true);
+                }
+            }
+        }
+
         // Redirect to the Home page and add missions to the parameters
         String path = "/WEB-INF/Contacts.html";
 

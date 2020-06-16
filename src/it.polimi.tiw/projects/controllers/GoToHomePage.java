@@ -55,6 +55,7 @@ public class GoToHomePage extends HttpServlet {
 		List<Meeting> meetings = new ArrayList<Meeting>();
 		session.setAttribute("tries", 0);
 		session.setAttribute("toDeselect",null);
+		session.setAttribute("participantsIDs",null);
 
 
 		if (session.isNew() || session.getAttribute("user") == null) {

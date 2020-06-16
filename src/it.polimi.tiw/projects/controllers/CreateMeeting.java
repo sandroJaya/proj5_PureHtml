@@ -121,6 +121,8 @@ public class CreateMeeting extends HttpServlet {
                 tries++;
                 session.setAttribute("tries", tries);
             }
+
+            session.setAttribute("participantsIDs",participantsID);
             response.sendRedirect(deselect);
             return;
 
