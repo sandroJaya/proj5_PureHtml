@@ -63,8 +63,8 @@ public class GetContacts extends HttpServlet {
                 ctx.setVariable("errorField", "");
             }
             Cookie cookies[] = new Cookie[5];
-
-            cookies[0] = new Cookie("title", request.getParameter("title"));
+            String title = (request.getParameter("title")).replaceAll("\\s+","_");
+            cookies[0] = new Cookie("title", title);
             cookies[1] = new Cookie("date", request.getParameter("date"));
             cookies[2] = new Cookie("time", request.getParameter("time"));
             cookies[3] = new Cookie("duration", request.getParameter("duration"));

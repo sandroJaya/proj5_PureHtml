@@ -105,6 +105,8 @@ public class CreateMeeting extends HttpServlet {
 
 
         if (isBadRequest) {
+            //String path = "/WEB-INF/CreationFailed.html";
+            //templateEngine.process(path, ctx, response.getWriter());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
             return;
         }
